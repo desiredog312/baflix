@@ -194,6 +194,12 @@
                 });
             });
 
+            $("#searchBtn").click(function() {
+                $.post("search.php", function() {
+                    window.location.href = "search.php";
+                });
+            });
+
             $("#searchFriendBtn").click(function() {
                 var searchUsername = $("#searchUsernameInput").val().trim();
                 if (searchUsername !== "") {
@@ -267,6 +273,7 @@
         <div class="btn-group" role="group" aria-label="Basic example">
             <button type="button" id="chatBtn" class="btn btn-primary">Chat</button>
             <button type="button" id="addFriendBtn" class="btn btn-secondary">Add Friend</button>
+            <button type="button" id="searchBtn" class="btn btn-secondary">Search</button>
             <button type="button" id="logoutBtn" class="btn btn-danger">Logout</button>
         </div>
 
