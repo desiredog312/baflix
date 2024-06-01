@@ -274,6 +274,7 @@
             <button type="button" id="chatBtn" class="btn btn-primary">Chat</button>
             <button type="button" id="addFriendBtn" class="btn btn-secondary">Add Friend</button>
             <button type="button" id="searchBtn" class="btn btn-secondary">Search</button>
+            <a href="bookmark.php" class="btn btn-secondary">Bookmark</a>
             <button type="button" id="logoutBtn" class="btn btn-danger">Logout</button>
         </div>
 

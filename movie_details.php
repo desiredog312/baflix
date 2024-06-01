@@ -19,10 +19,14 @@ if (isset($_GET['id'])) {
 </head>
 <body>
 <div class="container">
-    <h1 class="my-4"><?= htmlspecialchars($movie['title']) ?></h1>
-    <?php if (isset($movie['poster_path'])): ?>
-        <img src="https://image.tmdb.org/t/p/w500<?= $movie['poster_path'] ?>" class="img-fluid mb-4" alt="<?= htmlspecialchars($movie['title']) ?>">
-    <?php endif; ?>
+    <h1 class="mt-4"><?= htmlspecialchars($movie['title']) ?></h1>
+    <button class="btn btn-primary mb-4" onclick="addmovie()" id="addmovie">Add Movie</button>
+    <button class="btn btn-success mb-4" onclick="bookmark()" id="bookmark">Bookmark</button>
+    <div>
+        <?php if (isset($movie['poster_path'])): ?>
+            <img src="https://image.tmdb.org/t/p/w500<?= $movie['poster_path'] ?>" class="img-fluid mb-4" alt="<?= htmlspecialchars($movie['title']) ?>">
+        <?php endif; ?>
+    </div>
     <h2>Director</h2>
     <ul>
         <?php
@@ -34,14 +38,95 @@ if (isset($_GET['id'])) {
         ?>
     </ul>
     <h2>Cast</h2>
-    <ul>
+    <div class="row">
+        <!-- <ul> -->
         <?php foreach ($movie['credits']['cast'] as $cast): ?>
-            <li><?= htmlspecialchars($cast['name']) ?> as <?= htmlspecialchars($cast['character']) ?></li>
-        <?php endforeach; ?>
-    </ul>
+                <!-- <li><?= htmlspecialchars($cast['name']) ?> as <?= htmlspecialchars($cast['character']) ?></li> -->
+                <div class="col-4">
+                    <li><?= htmlspecialchars($cast['name']) ?> as <?= htmlspecialchars($cast['character']) ?></li>
+                </div>
+            <?php endforeach; ?>
+        <!-- </ul> -->
+    </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
+<script>
+    $(document).ready(function() {
+        check_bookmark()
+    })
+    var entityMap = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+        '/': '&#x2F;',
+        '`': '&#x60;',
+        '=': '&#x3D;'
+    };  
+
+    function escapeHtml (string) {
+        return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+            return entityMap[s];
+        });
+    }
+
+    function addmovie(){
+        $.post({
+            url: "movie_backend.php",
+            data: {
+                movie_id: '<?= $movie['id'] ?>',
+                title: escapeHtml('<?= $movie['title'] ?>'),
+                release_date: '<?= $movie['release_date'] ?>',
+                overview: escapeHtml('<?= $movie['overview'] ?>'),
+                poster_path: '<?= $movie['poster_path'] ?>'
+            },
+            success: function(response) {
+                var jsonData = JSON.parse(response);
+                alert(jsonData.message)
+            }
+        });
+    }
+
+    function bookmark(){
+        var id = '<?= $_GET['id'] ?>'
+        $.post({
+            url: "bookmark_backend.php",
+            data: {
+                id: id
+            },
+            success: function(response) {
+                var jsonData = JSON.parse(response);
+                alert(jsonData.message)
+                check_bookmark();
+            }
+        });
+    }
+    
+    function check_bookmark(){
+        var id = '<?= $_GET['id'] ?>'
+        $.post({
+            url: "bookmark_check.php",
+            data: {
+                id: id
+            },
+            success: function(response) {
+                var jsonData = JSON.parse(response);
+                if(jsonData.success == 1){
+                    $("#bookmark").attr('class','btn btn-danger mb-4')
+                    $("#bookmark").html('Hapus Bookmark')
+                }else{
+                    $("#bookmark").attr('class','btn btn-success mb-4')
+                    $("#bookmark").html('Bookmark')
+                }
+            }
+        });
+    }
+</script>
+
