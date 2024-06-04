@@ -44,8 +44,7 @@ CREATE TABLE IF NOT EXISTS friend_requests (
 
 -- TMDb Movies Table
 CREATE TABLE IF NOT EXISTS movies (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    tmdb_id INT NOT NULL UNIQUE, -- TMDb unique identifier for the movie
+    tmdb_id INT PRIMARY KEY, -- TMDb unique identifier for the movie
     title VARCHAR(255) NOT NULL,
     release_date DATE,
     overview TEXT,
@@ -59,7 +58,7 @@ CREATE TABLE IF NOT EXISTS bookmarks (
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, movie_id),
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (movie_id) REFERENCES movies(id)
+    FOREIGN KEY (movie_id) REFERENCES movies(tmdb_id)
 );
 
 -- Likes Table
@@ -69,7 +68,7 @@ CREATE TABLE IF NOT EXISTS likes (
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, movie_id),
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (movie_id) REFERENCES movies(id)
+    FOREIGN KEY (movie_id) REFERENCES movies(tmdb_id)
 );
 
 -- History Table
@@ -79,5 +78,5 @@ CREATE TABLE IF NOT EXISTS history (
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, movie_id, timestamp),
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (movie_id) REFERENCES movies(id)
+    FOREIGN KEY (movie_id) REFERENCES movies(tmdb_id)
 );
