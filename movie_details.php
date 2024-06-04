@@ -82,9 +82,9 @@ if (isset($_GET['id'])) {
             url: "movie_backend.php",
             data: {
                 movie_id: '<?= $movie['id'] ?>',
-                title: escapeHtml('<?= $movie['title'] ?>'),
+                title: escapeHtml("<?= $movie['title'] ?>"),
                 release_date: '<?= $movie['release_date'] ?>',
-                overview: escapeHtml('<?= $movie['overview'] ?>'),
+                overview: escapeHtml("<?= $movie['overview'] ?>"),
                 poster_path: '<?= $movie['poster_path'] ?>'
             },
             success: function(response) {
